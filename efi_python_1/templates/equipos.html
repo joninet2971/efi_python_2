@@ -1,0 +1,235 @@
+{% extends 'template_base.html' %}
+
+{% block title %}
+    Equipos
+{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+
+    <div class="row mb-4">
+        <div class="col">
+            <h3 class="text-primary">Agregar Equipos</h3>
+        </div>
+    </div>
+    <div class="card mb-4 p-3 mb-2 bg-secondary text-white">
+        <div class="card-body p-3 mb-2 bg-secondary text-white">
+            <form action="{{ url_for('equipos.equipos') }}" method="post" class="row">
+                <!-- Marca -->
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        <label for="marca">Marca</label>
+                        <select id="marca" name="marca" class="form-control">
+                            <option value="" disabled selected>Seleccionar Marca</option>
+                            {% for marca in marcas %}
+                            <option value="{{ marca.id }}">{{ marca.nombre_marca }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Modelo -->
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        <label for="modelo">Modelo</label>
+                        <select id="modelo" name="modelo" class="form-control">
+                            <option value="" disabled selected>Seleccionar Modelo</option>
+                        </select>
+                    </div>
+                </div>
+    
+                <!-- Costo -->
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        <label for="costo">Costo</label>
+                        <input type="number" id="costo" name="costo" class="form-control" placeholder="Costo">
+                    </div>
+                </div>
+    
+                <!-- Descripción -->
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        <label for="descripcion">Descripción</label>
+                        <input type="text" id="descripcion" name="descripcion" class="form-control" placeholder="Descripción">
+                    </div>
+                </div>
+    
+                <!-- Colores -->
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        <label for="color">Color</label>
+                        <select id="color" name="color" class="form-control">
+                            <option value="" disabled selected>Seleccionar Color</option>
+                            {% for color in caracteristicas['colores'] %}
+                            <option value="{{ color }}">{{ color }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+    
+                <!-- Tamaño de Pantalla -->
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        <label for="tamano_pantalla">Tamaño de Pantalla</label>
+                        <select id="tamano_pantalla" name="tamano_pantalla" class="form-control">
+                            <option value="" disabled selected>Seleccionar Tamaño de Pantalla</option>
+                            {% for tamano in caracteristicas['tamanos_pantalla'] %}
+                            <option value="{{ tamano }}">{{ tamano }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+    
+                <!-- Memoria -->
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        <label for="memoria">Memoria</label>
+                        <select id="memoria" name="memoria" class="form-control">
+                            <option value="" disabled selected>Seleccionar Memoria</option>
+                            {% for memoria in caracteristicas['memoria'] %}
+                            <option value="{{ memoria }}">{{ memoria }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+    
+                
+                <!-- Cámara Delantera -->
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        <label for="camara_delantera">Cámara Delantera</label>
+                        <select id="camara_delantera" name="camara_delantera" class="form-control">
+                            <option value="" disabled selected>Seleccionar Cámara Delantera</option>
+                            {% for camara in caracteristicas['camara_delantera'] %}
+                            <option value="{{ camara }}">{{ camara }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+    
+                <!-- Cámara Trasera -->
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        <label for="camara_trasera">Cámara Trasera</label>
+                        <select id="camara_trasera" name="camara_trasera" class="form-control">
+                            <option value="" disabled selected>Seleccionar Cámara Trasera</option>
+                            {% for camara in caracteristicas['camara_trasera'] %}
+                            <option value="{{ camara }}">{{ camara }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+    
+                <!-- Capacidad de Batería -->
+                <div class="col-md-6 mb-3">
+                    <div class="form-group">
+                        <label for="capacidad_bateria">Capacidad de Batería</label>
+                        <select id="capacidad_bateria" name="capacidad_bateria" class="form-control">
+                            <option value="" disabled selected>Seleccionar Capacidad de Batería</option>
+                            {% for bateria in caracteristicas['capacidad_bateria'] %}
+                            <option value="{{ bateria }}">{{ bateria }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+    
+                <div class="text-right">
+                    <button type="submit" class="btn btn-success">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    
+    <div class="row mb-4">
+        <div class="col">
+            <h3 class="text-info">Lista de Equipos</h3>
+        </div>
+    </div>
+    <div class="card p-3 mb-2 bg-secondary text-white">
+        <div class="card-body p-3 mb-2 bg-secondary text-white">
+
+            <form class="filter-form p-3 mb-2 bg-secondary text-white">
+                <div class="form-group p-3 mb-2 bg-secondary text-white">
+                    <label for="marca-filter">Filtrar por Marca:</label>
+                    <select name="marca" id="marca-filter" class="form-control marca-select">
+                        <option value="">Todas las Marcas</option>
+                        {% for marca in marcas %}
+                            <option value="{{ marca.nombre_marca }}">{{ marca.nombre_marca }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </form>
+
+            <div class="container mt-5">
+                <div class="table-responsive">
+                    <table class="table table-dark table-striped table-bordered">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Marca</th>
+                                <th>Modelo</th>
+                                <th>Categoria</th>
+                                <th>Costo</th>
+                                <th>Descripción</th>
+                                <th>Color</th>
+                                <th>Tamaño Pantalla</th>
+                                <th>Memoria</th>
+                                <th>Cámara Delantera</th>
+                                <th>Cámara Trasera</th>
+                                <th>Batería</th>
+                                <th>Editar</th>
+                                <th>Borrar</th>
+                            </tr>
+                        </thead>
+                        <tbody class="equipos-table">
+                            {% for equipo in equipos %}
+                            <tr data-marca="{{ equipo.marca.nombre_marca|lower }}">
+                                <td>{{ equipo.marca.nombre_marca }}</td>
+                                <td>{{ equipo.modelo.nombre_modelo }}</td>
+                                <td>{{ equipo.modelo.categoria.nombre_categoria }}</td>
+                                <td>{{ equipo.costo }}</td>
+                                <td>{{ equipo.descripcion }}</td>
+                                <td>{{ equipo.color }}</td>
+                                <td>{{ equipo.tamano_pantalla }}</td>
+                                <td>{{ equipo.memoria }}</td>
+                                <td>{{ equipo.camara_delantera }}</td>
+                                <td>{{ equipo.camara_trasera }}</td>
+                                <td>{{ equipo.capacidad_bateria }}</td>
+                                <td><a href="/equipo/{{ equipo.id }}/editar" class="btn btn-warning btn-sm">Editar</a></td>
+                                <td><a href="/equipo/{{ equipo.id }}/eliminar" class="btn btn-danger btn-sm">Eliminar</a></td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+document.getElementById('marca').addEventListener('change', function() {
+    var marcaId = this.value;
+    var modeloSelect = document.getElementById('modelo');
+    modeloSelect.innerHTML = '<option value="" disabled selected>Seleccionar Modelo</option>';
+    if (marcaId) {
+        fetch('/modelos/' + marcaId)
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(function(modelo) {
+                    var option = document.createElement('option');
+                    option.value = modelo.id;
+                    option.text = modelo.nombre_modelo;
+                    modeloSelect.appendChild(option);
+                });
+            });
+    }
+});
+
+</script>
+
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

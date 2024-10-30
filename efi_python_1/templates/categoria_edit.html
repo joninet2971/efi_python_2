@@ -1,0 +1,27 @@
+{% extends 'template_base.html' %}
+
+{% block title %}
+Edite la Categoria
+{% endblock %}
+
+{% block body %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h3 class="text-primary">Edite la Categoria</h3>
+        </div>
+    </div>
+    <div class="card p-3 mb-2 bg-secondary text-white">
+        <div class="card-body p-3 mb-2 bg-secondary text-white">
+            <form action="" method="post">
+                <div class="form-group mb-3">
+                    <label for="nombre" class="form-label">Nombre de la Categoría</label>
+                    <input type="text" id="nombre" name="nombre" class="form-control" value="{{ categorias.nombre_categoria }}" required>
+                </div>
+                <button type="submit" class="btn btn-success">Guardar Cambios</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
