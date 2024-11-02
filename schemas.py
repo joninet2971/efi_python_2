@@ -2,7 +2,7 @@ from app import ma
 
 from marshmallow import validates, ValidationError
 
-from models import User, Tipo, Marca, Vehiculo
+from models import User, Marca
 
 class UserSchema(ma.SQLAlchemySchema):
     class Meta:
@@ -19,34 +19,13 @@ class UserMinimalSchema(ma.SQLAlchemySchema):
 
     username = ma.auto_field()
 
-class TipoSchema(ma.SQLAlchemySchema):
-    class Meta:
-        model = Tipo
-
-    nombre=ma.auto_field()
-
 class MarcaSchema(ma.SQLAlchemySchema):
     class Meta:
-        model = Tipo
-
-    nombre=ma.auto_field()
-
-class VehiculoSchema(ma.SQLAlchemySchema):
-    class Meta:
-        model = Vehiculo
-
+        model = Marca
+        
     id = ma.auto_field()
-    modelo = ma.auto_field()
-    anio_fabricacion = ma.auto_field()
-    precio = ma.auto_field()
-    marca_id = ma.auto_field()
-    tipo_id = ma.auto_field()
-    marca = ma.Nested(MarcaSchema)
-    tipo = ma.Nested(TipoSchema)
+    nombre = ma.auto_field()
 
-    @validates('precio')
-    def validate_precio(self, value):
-        if int(value) > 2024:
-            return ValidationError("El año es superior al actual")
+
 
 

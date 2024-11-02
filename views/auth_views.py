@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from flask import Blueprint, request, jsonify, make_response
+from flask import Blueprint, request, jsonify
 from flask_jwt_extended import (
     create_access_token,
     get_jwt,
@@ -24,7 +24,9 @@ def login():
     username = data.username
     password = data.password
 
+
     usuario = User.query.filter_by(username=username).first()
+    print(usuario)
     
     if usuario and check_password_hash(
         pwhash=usuario.password_hash, password=password
@@ -33,7 +35,8 @@ def login():
             identity=username,
             expires_delta=timedelta(minutes=20),
             additional_claims=dict(
-                administrador=usuario.is_admin
+                administrador=usuario.is_admin,
+                tipo=usuario.tipo
             )
         )
 
@@ -47,18 +50,25 @@ def login():
 def users():
     additional_data = get_jwt()
     administrador = additional_data.get('administrador')
+    tipo = additional_data.get('tipo')
+    print(tipo)
+    print(administrador)
+
+   
 
     if request.method == 'POST':
         if administrador is True:
             data = request.get_json()
             username = data.get('usuario')
             password = data.get('contrasenia')
+            tipo_usuario = data.get('tipo')
 
             try:
                 nuevo_usuario = User(
                     username=username,
                     password_hash=generate_password_hash(password),
                     is_admin=False,
+                    tipo=tipo_usuario
                 )
                 db.session.add(nuevo_usuario)
                 db.session.commit()
