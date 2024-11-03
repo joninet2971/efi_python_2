@@ -1,4 +1,4 @@
-#!/home/rodolfo/Escritorio/EFI_Python/efi_python_2/entorno/bin/python3
+#!/home/joninet/Documentos/git_itec/efi_python_2/entorno/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

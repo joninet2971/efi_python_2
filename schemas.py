@@ -2,7 +2,7 @@ from app import ma
 
 from marshmallow import validates, ValidationError
 
-from models import User, Marca
+from models import User, Marca, Modelo
 
 class UserSchema(ma.SQLAlchemySchema):
     class Meta:
@@ -25,6 +25,14 @@ class MarcaSchema(ma.SQLAlchemySchema):
         
     id = ma.auto_field()
     nombre = ma.auto_field()
+
+class ModeloSchema(ma.SQLAlchemySchema):
+    class Meta:
+        model = Modelo
+        
+    id = ma.auto_field()
+    nombre = ma.auto_field()
+    id_marca = ma.auto_field(required=True)
 
 
 

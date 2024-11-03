@@ -33,7 +33,7 @@ def login():
     ):
         access_token = create_access_token(
             identity=username,
-            expires_delta=timedelta(minutes=20),
+            expires_delta=timedelta(minutes=60),
             additional_claims=dict(
                 administrador=usuario.is_admin,
                 tipo=usuario.tipo
