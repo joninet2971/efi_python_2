@@ -16,13 +16,14 @@ marca_bp = Blueprint('marca', __name__)
 @marca_bp.route('/marca', methods=['GET','POST'])
 @jwt_required()
 def marca():
-    additional_data = get_jwt()
-    tipo_usuario = additional_data.get('tipo')
-    administrador = additional_data.get('administrador')
     marca = Marca.query.filter_by(activo=True).all()
 
+    additional_data = get_jwt()
+    visor = additional_data.get('visor')
+    admin = additional_data.get('administrador')
+
     if request.method == 'POST':
-        if tipo_usuario=='crear' or administrador is True:
+        if  admin:
             data = request.get_json()
             errors = MarcaSchema().validate(data)
             if errors:
@@ -33,10 +34,11 @@ def marca():
             )
             db.session.add(nueva_marca)
             db.session.commit()
-            return MarcaSchema().dump(nueva_marca)
+            return MarcaSchema().dump(nueva_marca), 201
         else:
             return jsonify(Mensaje= "Solo el admin puede crear nuevas marcas")
-    if tipo_usuario=='visor' or administrador is True:
+    
+    if visor or admin:
         return MarcaSchema().dump(marca, many=True)
     return jsonify(Mensaje="El usuario no tiene permiso")
 
@@ -49,10 +51,10 @@ def marca_borrar():
     
     if marca.activo is True:
         additional_data = get_jwt()
-        tipo_usuario = additional_data.get('tipo')
-        tipo_admin = additional_data.get('administrador')
+        editor = additional_data.get('editor')
+        admin = additional_data.get('administrador')
 
-        if tipo_usuario == 'borrar' or tipo_admin is True:
+        if editor or admin:
             
             
             """errors = MarcaSchema().validate(data)
@@ -73,14 +75,15 @@ def marca_editar():
     data = request.get_json()
     id_editar = int(data.get('id'))
     nombre_editar = data.get('nombre')
+
     marca = Marca.query.get_or_404(id_editar)
     
     if marca.activo is True:
         additional_data = get_jwt()
-        tipo_usuario = additional_data.get('tipo')
-        tipo_admin = additional_data.get('administrador')
+        editor = additional_data.get('editor')
+        admin = additional_data.get('administrador')
 
-        if tipo_usuario == 'editar' or tipo_admin is True:
+        if editor or admin:
             
             
             """errors = MarcaSchema().validate(data)

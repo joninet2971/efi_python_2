@@ -2,7 +2,7 @@ from flask import Blueprint, request, make_response, jsonify
 from flask_jwt_extended import get_jwt, jwt_required
 
 from app import db
-from models import Modelo, Marca
+from models import Modelo
 from schemas import ModeloSchema  # Cambiamos MarcaSchema por ModeloSchema
 
 modelo_bp = Blueprint('modelo', __name__)
@@ -12,14 +12,16 @@ modelo_bp = Blueprint('modelo', __name__)
 def modelo():
     data = request.get_json()
     id_marca = data.get('id_marca')
-    marca = Marca.query.get_or_404(id_marca)
+    modelos = Modelo.query.filter_by(activo=True).all()
     
     additional_data = get_jwt()
-    tipo_usuario = additional_data.get('tipo')
-    administrador = additional_data.get('administrador')
-
+    visor = additional_data.get('visor')
+    admin = additional_data.get('administrador')
+    print("0")
     if request.method == 'POST':
-        if tipo_usuario == 'crear' or administrador:
+        print("1")
+        if admin:
+            print("2")
             errors = ModeloSchema().validate(data)
             if errors:
                 return make_response(jsonify(errors), 400)
@@ -34,8 +36,7 @@ def modelo():
         else:
             return jsonify({"Mensaje": "Solo el admin puede crear nuevos modelos"})
 
-    if tipo_usuario == 'visor' or administrador:
-        modelos = Modelo.query.filter_by(activo=True).all()
+    if visor or admin:
         return jsonify(ModeloSchema(many=True).dump(modelos))
 
     return jsonify({"Mensaje": "El usuario no tiene permiso"})
@@ -49,10 +50,10 @@ def modelo_borrar():
     
     if modelo.activo is True:
         additional_data = get_jwt()
-        tipo_usuario = additional_data.get('tipo')
-        tipo_admin = additional_data.get('administrador')
+        editor = additional_data.get('tipo')
+        admin = additional_data.get('administrador')
 
-        if tipo_usuario == 'borrar' or tipo_admin is True:
+        if editor or admin:
             
             """errors = MarcaSchema().validate(data)
             if errors:
@@ -70,19 +71,21 @@ def modelo_borrar():
 @jwt_required()
 def modelo_editar():
     data = request.get_json()
-    
+    id_marca = int(data.get('id_marca'))
+    modelo_editar = data.get('nombre')
     id_editar = int(data.get('id'))
+
     modelo = Modelo.query.get_or_404(id_editar)
     
     if modelo.activo is True:
         additional_data = get_jwt()
-        tipo_usuario = additional_data.get('tipo')
-        tipo_admin = additional_data.get('administrador')
+        editor = additional_data.get('editor')
+        admin = additional_data.get('administrador')
 
-        if tipo_usuario == 'editar' or tipo_admin is True:
+        if editor or admin:
             
-            modelo.nombre = data.get('nombre', modelo.nombre)
-            modelo.id_marca = data.get('id_marca', modelo.id_marca)
+            modelo.nombre = modelo_editar
+            modelo.id_marca = id_marca
         
             db.session.commit()
             
