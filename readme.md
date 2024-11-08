@@ -32,7 +32,7 @@ Este es un proyecto desarrollado con Python Flask y SQLAlchemy. El proyecto util
 
 5. Configurar las variables de entorno:
 
-    archivo app.py
+    editar archivo .env-editar a .env
     app.config['SQLALCHEMY_DATABASE_URI'] = 'url base de datos'
     
 6. Realizar las migraciones de la base de datos:
